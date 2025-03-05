@@ -17,6 +17,8 @@ public class FrmJuego extends JFrame {
     private JPanel pnlJugador2;
     private JTabbedPane tpJugadores;
 
+    private Jugador jugador1, jugador2;
+
     public FrmJuego() {
         btnRepartir = new JButton();
         btnVerificar = new JButton();
@@ -57,11 +59,17 @@ public class FrmJuego extends JFrame {
         getContentPane().add(tpJugadores);
         getContentPane().add(btnRepartir);
         getContentPane().add(btnVerificar);
+
+        jugador1 = new Jugador();
+        jugador2 = new Jugador();
     }
 
-
     private void btnRepartirClick(ActionEvent evt) {
+        jugador1.repartir();
+        jugador1.mostrar(pnlJugador1);
 
+        jugador2.repartir();
+        jugador2.mostrar(pnlJugador2);
     }
 
     private void btnVerificarClick(ActionEvent evt) {
