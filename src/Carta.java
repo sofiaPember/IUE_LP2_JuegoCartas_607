@@ -56,4 +56,11 @@ public class Carta {
         return NombreCarta.values()[residuo - 1];
     }
 
+    public int getValor() {
+        int residuo = indice % 13;
+        if (residuo == 0) {
+            residuo = 13;
+        }
+        return residuo;
+    }
 }

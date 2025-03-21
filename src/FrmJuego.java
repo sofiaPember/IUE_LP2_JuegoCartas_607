@@ -1,28 +1,33 @@
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Random;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.WindowConstants;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 public class FrmJuego extends JFrame {
 
     private JButton btnRepartir;
     private JButton btnVerificar;
+    private JLabel lblPuntaje1, lblPuntaje2;
     private JPanel pnlJugador1;
     private JPanel pnlJugador2;
     private JTabbedPane tpJugadores;
+    private int puntaje1, puntaje2;
 
     private Jugador jugador1, jugador2;
 
     public FrmJuego() {
         btnRepartir = new JButton();
         btnVerificar = new JButton();
+        lblPuntaje1 = new JLabel("Puntaje: 0");
+        lblPuntaje2 = new JLabel("Puntaje: 0");
         tpJugadores = new JTabbedPane();
         pnlJugador1 = new JPanel();
         pnlJugador2 = new JPanel();
@@ -56,13 +61,29 @@ public class FrmJuego extends JFrame {
             }
         });
 
+        lblPuntaje1.setBounds(230, 10, 200, 25);
+        lblPuntaje2.setBounds(230, 10, 200, 25);
+
         getContentPane().setLayout(null);
         getContentPane().add(tpJugadores);
         getContentPane().add(btnRepartir);
         getContentPane().add(btnVerificar);
+        getContentPane().add(lblPuntaje1);
+        getContentPane().add(lblPuntaje2);
 
         jugador1 = new Jugador();
         jugador2 = new Jugador();
+
+        // Añadir ChangeListener al JTabbedPane
+        tpJugadores.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                actualizarVisibilidadPuntaje();
+            }
+        });
+
+        // Inicializar la visibilidad de los puntajes
+        actualizarVisibilidadPuntaje();
     }
 
     private void btnRepartirClick(ActionEvent evt) {
@@ -74,14 +95,36 @@ public class FrmJuego extends JFrame {
     }
 
     private void btnVerificarClick(ActionEvent evt) {
+        puntaje1 = 0;
+        puntaje2 = 0;
         switch (tpJugadores.getSelectedIndex()) {
             case 0:
+                puntaje1 = jugador1.calcularPuntajeNoAgrupadas();
+                jugador1.ordenar(pnlJugador1);
                 JOptionPane.showMessageDialog(null, jugador1.getGrupos());
                 break;
             case 1:
+                puntaje2 = jugador2.calcularPuntajeNoAgrupadas();
+                jugador2.ordenar(pnlJugador2);
                 JOptionPane.showMessageDialog(null, jugador2.getGrupos());
                 break;
         }
+
+        // Actualizar el JLabel con el puntaje calculado
+        lblPuntaje1.setText("Puntaje: " + puntaje1);
+        lblPuntaje2.setText("Puntaje: " + puntaje2);
+
+        // Actualizar la visibilidad de los puntajes
+        actualizarVisibilidadPuntaje();
     }
 
+    private void actualizarVisibilidadPuntaje() {
+        if (tpJugadores.getSelectedIndex() == 0) {
+            lblPuntaje1.setVisible(true);
+            lblPuntaje2.setVisible(false);
+        } else {
+            lblPuntaje1.setVisible(false);
+            lblPuntaje2.setVisible(true);
+        }
+    }
 }
